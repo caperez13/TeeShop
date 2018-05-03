@@ -1,0 +1,89 @@
+<%--
+    Document   : category
+    Author     : carlos
+--%>
+
+
+<%-- Set session-scoped variable to track the view user is coming from.
+     This is used by the language mechanism in the Controller so that
+     users view the same page when switching between English and Czech. --%>
+<c:set var='view' value='/category' scope='session' />
+
+    <div class="product-big-title-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="product-bit-title text-center">
+                        <h2><fmt:message key="${selectedCategory.name}" /></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<div class="maincontent-area">
+    <div class="zigzag-bottom"></div>
+    <div class="center-content">
+        <div id="categoryLeftColumn"> 
+
+            <c:forEach var="category" items="${categories}">
+
+                <c:choose>
+                    <c:when test="${category.name == selectedCategory.name}">
+                        <div class="categoryButton" id="selectedCategory">
+                            <span class="categoryText">
+                                <fmt:message key="${category.name}"/>
+                            </span>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value='category?${category.id}'/>" class="categoryButton">
+                            <span class="categoryText">
+                                <fmt:message key="${category.name}"/>
+                            </span>
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+
+            </c:forEach>
+
+        </div>
+
+        <div id="categoryRightColumn">
+
+            <table id="productTable">
+
+                <c:forEach var="product" items="${categoryProducts}" varStatus="iter">
+
+                    <tr class="${((iter.index % 2) == 0) ? 'lightBlue' : 'white'}">
+                        <td>
+                            <img src="${initParam.productImagePath}${product.name}.png"
+                                 alt="<fmt:message key='${product.name}'/>">
+                        </td>
+
+                        <td>
+                            <fmt:message key="${product.name}"/>
+                            <br>
+                            <span class="smallText"><fmt:message key='${product.name}Description'/></span>
+                        </td>
+
+                        <td><fmt:formatNumber type="currency" currencySymbol="&euro; " value="${product.price}"/></td>
+
+                        <td>
+                            <form action="<c:url value='addToCart'/>" method="post">
+                                <input type="hidden"
+                                       name="productId"
+                                       value="${product.id}">
+                                <input type="submit"
+                                       name="submit"
+                                       value="<fmt:message key='addToCart'/>">
+                            </form>
+                        </td>
+                    </tr>
+
+                </c:forEach>
+
+            </table>
+        </div>
+    </div>
+</div>
